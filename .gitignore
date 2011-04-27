@@ -3,5 +3,4 @@
 *.iws
 *.iml
 target/
-work/
 .idea/
