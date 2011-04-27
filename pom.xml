@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.rackspace.api.clients</groupId>
+  <artifactId>veracode-client</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <scm>
+        <connection>scm:git|ssh://git@dev.git.radar.rackspace.com/alertfind-client</connection>
+        <developerConnection>scm:git|ssh://git@dev.git.radar.rackspace.com/alertfind-client</developerConnection>
+    </scm>
+    
+    <repositories>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+            <id>radar-nexus-repo</id>
+            <name>RADAR Nexus Repository</name>
+            <url>http://dev-hudson1.sat.intensive.int:8071/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+            <id>radar-nexus-repo</id>
+            <name>RADAR Nexus Repository</name>
+            <url>http://dev-hudson1.sat.intensive.int:8071/nexus/content/groups/public</url>
+        </pluginRepository>
+    </pluginRepositories>
+    
+    <distributionManagement>
+        <repository>
+            <id>radar-nexus-repo</id>
+            <name>Internal Releases</name>
+            <url>http://dev-hudson1.sat.intensive.int:8071/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>radar-nexus-snapshot-repo</id>
+            <name>Internal Snapshots</name>
+            <url>http://dev-hudson1.sat.intensive.int:8071/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+  <build>
+      <plugins>
+          <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                    <excludes>
+                        <exclude>**/package-info.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+      </plugins>
+
+  </build>
+
+
+
+  <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1</version>
+        </dependency>
+    </dependencies>
+
+</project>
