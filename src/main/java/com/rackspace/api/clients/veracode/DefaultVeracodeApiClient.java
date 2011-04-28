@@ -1,5 +1,7 @@
 package com.rackspace.api.clients.veracode;
 
+import com.rackspace.api.clients.veracode.responses.AppListResponse;
+import com.rackspace.api.clients.veracode.responses.UploadResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -18,6 +20,8 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,19 +30,18 @@ import java.net.URISyntaxException;
  * Time: 8:36 AM
  * To change this template use File | Settings | File Templates.
  */
-public class VeracodeClientImpl implements VeracodeClient {
+public class DefaultVeracodeApiClient implements VeracodeApiClient {
 
     public static final String UPLOAD = "uploadbuild.do";
     public static final String PRESCAN = "uploadprescan.do";
     public static final String APP_LIST = "getappbuilds.do";
 
     private URI baseUri;
-    private final String appName;
 
     private HttpClient client;
     private PrintStream logger;
 
-    public VeracodeClientImpl(String baseUri, String username, String password, String appName, PrintStream logger) {
+    public DefaultVeracodeApiClient(String baseUri, String username, String password, PrintStream logger) {
 
         try {
             this.baseUri = new URI(baseUri);
@@ -48,20 +51,34 @@ public class VeracodeClientImpl implements VeracodeClient {
 
 
         this.logger = logger;
-        this.appName = appName;
         this.client = initiateClient(new UsernamePasswordCredentials(username, password));
+
     }
 
-    public String uploadFile(File file, String buildVersion, String appName) {
-        HttpPost post = new HttpPost(baseUri.resolve(UPLOAD));
-
+    public String scanArtifacts(List<File> artifacts, int buildVersion, String appName) throws VeracodeApiException {
         String appId = getAppId(appName);
+
+        String buildId = null;
+
+        for (File artifact : artifacts) {
+            buildId = uploadFile(artifact, buildVersion, appId);
+        }
+
+        if (buildId != null) {
+            prescanBuild(buildId);
+        }
+
+        return buildId;
+    }
+
+    private String uploadFile(File file, int buildVersion, String appId) throws VeracodeApiException {
+        HttpPost post = new HttpPost(baseUri.resolve(UPLOAD));
 
         MultipartEntity entity = new MultipartEntity();
 
         try {
             entity.addPart(new FormBodyPart("app_id", new StringBody(appId)));
-            entity.addPart(new FormBodyPart("version", new StringBody(buildVersion)));
+            entity.addPart(new FormBodyPart("version", new StringBody(String.valueOf(buildVersion))));
             entity.addPart(new FormBodyPart("platform", new StringBody("Java")));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("The Request could not be made due to an encoding issue", e);
@@ -75,16 +92,18 @@ public class VeracodeClientImpl implements VeracodeClient {
 
         logger.println("Executing Request: " + post.getRequestLine());
 
+        UploadResponse uploadResponse = null;
+
         try {
-            HttpResponse response = client.execute(post);
+            uploadResponse = new UploadResponse(client.execute(post));
         } catch (IOException e) {
-            throw new RuntimeException("The call to Veracode failed.", e);
+            throw new VeracodeApiException("The call to Veracode failed.", e);
         }
 
-        return null;
+        return uploadResponse.getBuildId(buildVersion);
     }
 
-    public void prescanBuild(String buildId) {
+    private void prescanBuild(String buildId) {
         HttpGet get = new HttpGet(baseUri.resolve(PRESCAN + "?build_id=" + buildId));
 
         logger.println("Executing Request: " + get.getRequestLine());
@@ -100,8 +119,21 @@ public class VeracodeClientImpl implements VeracodeClient {
         client.getConnectionManager().shutdown();
     }
 
-    private String getAppId(String appName) {
-        return null;
+    public String getAppId(String appName) throws VeracodeApiException {
+        HttpGet get = new HttpGet(baseUri.resolve(APP_LIST));
+
+        logger.println("Executing Request: " + get.getRequestLine());
+
+
+        AppListResponse applist = null;
+
+        try {
+            applist = new AppListResponse(client.execute(get));
+        } catch (IOException e) {
+            throw new VeracodeApiException("The call to Veracode failed.", e);
+        }
+
+        return applist.getAppId(appName);
     }
 
 
@@ -115,4 +147,6 @@ public class VeracodeClientImpl implements VeracodeClient {
 
         return client;
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.rackspace.api.clients.veracode;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -9,11 +10,11 @@ import java.io.File;
  * Time: 8:16 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface VeracodeClient {
+public interface VeracodeApiClient {
 
-    public String uploadFile(File file, String buildVersion, String appName);
+    public String scanArtifacts(List<File> artifacts, int buildVersion, String appName) throws VeracodeApiException;
 
-    public void prescanBuild(String buildId);
+    public String getAppId(String appName) throws VeracodeApiException;
 
     public void shutdown();
 }
