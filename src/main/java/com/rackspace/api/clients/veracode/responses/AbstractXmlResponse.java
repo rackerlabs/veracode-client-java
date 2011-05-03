@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.*;
 import javax.xml.xpath.*;
 
@@ -36,13 +37,21 @@ public abstract class AbstractXmlResponse {
         HttpEntity responseEntity = extractResponse(response);
 
         try {
-            this.doc = builder.parse(responseEntity.getContent());
-            EntityUtils.consume(responseEntity);
+            if (response.getStatusLine().getStatusCode() == 200) {
+                this.doc = builder.parse(responseEntity.getContent());
+                EntityUtils.consume(responseEntity);
+            } else {
+                String errorMessage = EntityUtils.toString(responseEntity);
+                int errorCode = response.getStatusLine().getStatusCode();
+
+                throw new VeracodeApiException("Error Code: " + errorCode + " Error Message: " + errorMessage);
+            }
         } catch (SAXException e) {
             throw new VeracodeApiException("Could not Parse Response.", e);
         } catch (IOException e) {
             throw new VeracodeApiException("Could not Parse Response.", e);
         }
+
 
         XPathFactory factory = XPathFactory.newInstance();
         this.xpath = factory.newXPath();
@@ -51,12 +60,8 @@ public abstract class AbstractXmlResponse {
     private HttpEntity extractResponse(HttpResponse response) throws VeracodeApiException {
         HttpEntity responseEntity = response.getEntity();
 
-        if(response.getStatusLine()==null || responseEntity==null){
+        if (response.getStatusLine() == null || responseEntity == null) {
             throw new VeracodeApiException("Response was null");
-        }
-
-        if(response.getStatusLine().getStatusCode()!=200){
-            throw new VeracodeApiException("API Call failed with " + response.getStatusLine().getStatusCode());
         }
 
         return responseEntity;
