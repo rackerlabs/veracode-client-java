@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface VeracodeApiClient {
 
-    public String scanArtifacts(List<File> artifacts, int buildVersion, String appName) throws VeracodeApiException;
+    public String scanArtifacts(List<File> artifacts, int buildVersion, String appName, String platform) throws VeracodeApiException;
 
     public String getAppId(String appName) throws VeracodeApiException;
 

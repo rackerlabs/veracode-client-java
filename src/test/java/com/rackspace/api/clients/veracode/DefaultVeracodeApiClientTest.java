@@ -1,6 +1,7 @@
 package com.rackspace.api.clients.veracode;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -19,6 +20,7 @@ public class DefaultVeracodeApiClientTest {
     }
 
     @Test
+    @Ignore
     public void testGetAppId() throws Exception {
         String appId = client.getAppId("RADAR");
 
