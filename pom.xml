@@ -24,8 +24,8 @@
 
     <scm>
         <url>https://github.com/rackspace/veracode-client-java.git</url>
-        <connection>scm:git:git@github.com/veracode-client-java.git</connection>
-        <developerConnection>scm:git:git@github.com/veracode-client-java.git</developerConnection>
+        <connection>scm:git|ssh://git@github.com/veracode-client-java</connection>
+        <developerConnection>scm:git|ssh://git@github.com/veracode-client-java</developerConnection>
     </scm>
 
     <developers>
