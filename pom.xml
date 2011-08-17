@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rackspace.api.clients</groupId>
     <artifactId>veracode-client</artifactId>
-    <version>1.3</version>
+    <version>1.3-SNAPSHOT</version>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -24,8 +24,8 @@
 
     <scm>
         <url>https://github.com/rackspace/veracode-client-java.git</url>
-        <connection>scm:git|ssh://git@github.com/veracode-client-java.git</connection>
-        <developerConnection>scm:git|ssh://git@github.com/veracode-client-java.git</developerConnection>
+        <connection>scm:git|ssh://git@github.com/rackspace/veracode-client-java.git</connection>
+        <developerConnection>scm:git|ssh://git@github.com/rackspace/veracode-client-java.git</developerConnection>
     </scm>
 
     <developers>
