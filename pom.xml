@@ -5,6 +5,16 @@
     <artifactId>veracode-client</artifactId>
     <version>1.3-SNAPSHOT</version>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <name>veracode-client</name>
+    <description>A simple java client for the Veracode API</description>
+    <url>https://github.com/rackspace/veracode-client-java</url>
+
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
@@ -14,9 +24,52 @@
     </licenses>
 
     <scm>
-        <connection>scm:git|ssh://git@github.com/veracode-client-java</connection>
-        <developerConnection>scm:git|ssh://git@github.com/veracode-client-java</developerConnection>
+        <url>https://github.com/rackspace/veracode-client-java.git</url>
+        <connection>scm:git:git@github.com/veracode-client-java.git</connection>
+        <developerConnection>scm:git:git@github.com/veracode-client-java.git</developerConnection>
     </scm>
+
+    <developers>
+        <developer>
+            <name>John Madrid</name>
+            <id>RackerJohnMadrid</id>
+            <email>john.madrid@rackspace.com</email>
+            <organization>Rackspace</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -31,8 +84,33 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-
     </build>
 
     <dependencies>
