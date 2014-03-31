@@ -66,6 +66,10 @@ public class DefaultVeracodeApiClient implements VeracodeApiClient {
     }
 
     public String scanArtifacts(List<File> artifacts, int buildVersion, String appName, String platform) throws VeracodeApiException {
+        return scanArtifacts(artifacts, String.valueOf(buildVersion), appName, platform);
+    }
+
+    public String scanArtifacts(List<File> artifacts, String buildVersion, String appName, String platform) throws VeracodeApiException {
         String appId = getAppId(appName);
 
         String buildId = null;
@@ -81,14 +85,14 @@ public class DefaultVeracodeApiClient implements VeracodeApiClient {
         return buildId;
     }
 
-    private String uploadFile(File file, int buildVersion, String appId, String platfrom) throws VeracodeApiException {
+    private String uploadFile(File file, String buildVersion, String appId, String platfrom) throws VeracodeApiException {
         HttpPost post = new HttpPost(baseUri.resolve(UPLOAD));
 
         MultipartEntity entity = new MultipartEntity();
 
         try {
             entity.addPart(new FormBodyPart("app_id", new StringBody(appId)));
-            entity.addPart(new FormBodyPart("version", new StringBody(String.valueOf(buildVersion))));
+            entity.addPart(new FormBodyPart("version", new StringBody(buildVersion)));
             entity.addPart(new FormBodyPart("platform", new StringBody(platfrom)));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("The Request could not be made due to an encoding issue", e);
@@ -96,7 +100,6 @@ public class DefaultVeracodeApiClient implements VeracodeApiClient {
         }
 
         entity.addPart("file", new FileBody(file, "text/plain"));
-
 
         post.setEntity(entity);
 
