@@ -27,7 +27,7 @@ import java.util.Formatter;
  * To change this template use File | Settings | File Templates.
  */
 public class UploadResponse extends AbstractXmlResponse {
-    public static final String XPATH_EXPRESSION = "//application/build[@version='%d']/@build_id";
+    public static final String XPATH_EXPRESSION = "//application/build[@version='%s']/@build_id";
 
     private XPathExpression expression;
 
@@ -35,7 +35,7 @@ public class UploadResponse extends AbstractXmlResponse {
         super(response);
     }
 
-    public String getBuildId(int buildVersion) {
+    public String getBuildId(String buildVersion) {
         Formatter formatter = new Formatter();
         String buildId = null;
 
